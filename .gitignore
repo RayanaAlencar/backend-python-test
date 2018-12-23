@@ -1,2 +1,7 @@
 *.pyc
 .idea
+.vscode/
+bin/*
+lib/python2.7/*
+include/*
+local/*
