@@ -1,11 +1,13 @@
 from alayatodo import app,db,ma
 from alayatodo.models import User,Todo,TodoSchema
+from sqlalchemy.exc import SQLAlchemyError
 from flask import (
     redirect,
     render_template,
     request,
     session,
-    jsonify
+    jsonify,
+    flash
     )
 
 
@@ -50,6 +52,8 @@ def todo(id):
     user_id = session['user'].get('id')
     print( 'todo details...')
     todo = Todo.query.filter_by(id = id).first()
+    if todo is None:
+        return render_template('404.html')
     if todo.user_id != user_id :
         return render_template('404.html')
     return render_template('todo.html', todo = todo)
@@ -73,8 +77,15 @@ def todos_POST():
     user_id = session['user']['id']
     description = request.form.get('description', '')
     new_Todo = Todo(user_id, description)
-    db.session.add(new_Todo)
-    db.session.commit()
+    try:
+        db.session.add(new_Todo)
+        db.session.commit()
+        flash('Todo '+ new_Todo.description + ' added with Success!', 'success')
+    except SQLAlchemyError:
+        db.session.rollback()
+        flash('Something went wrong. Please try again later', 'danger')
+    except AssertionError:
+        flash('A Todo must have a description', 'danger')
     return redirect('/todo')
 
 
@@ -83,8 +94,13 @@ def todo_delete(id):
     if not session.get('logged_in'):
         return redirect('/login')
     todo = Todo.query.filter_by(id = id).first()
-    db.session.delete(todo)
-    db.session.commit()
+    try:
+        db.session.delete(todo)
+        db.session.commit()
+        flash('Todo '+ todo.description + ' deleted with Success!', 'success')
+    except SQLAlchemyError:
+        db.session.rollback()
+        flash('Something went wrong. Please try again later','danger')
     return redirect('/todo')
 
 
@@ -94,6 +110,8 @@ def todo_json(id):
         return redirect('/login')
     user_id = session['user'].get('id')
     todo = Todo.query.filter_by(id = id).first()
+    if todo is None:
+        return render_template('404.html')
     if todo.user_id != user_id :
         return render_template('404.html')
     todo_schema = TodoSchema()
