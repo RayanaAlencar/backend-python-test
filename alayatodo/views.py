@@ -1,10 +1,11 @@
-from alayatodo import app, db
-from alayatodo.models import User,Todo
+from alayatodo import app,db,ma
+from alayatodo.models import User,Todo,TodoSchema
 from flask import (
     redirect,
     render_template,
     request,
-    session
+    session,
+    jsonify
     )
 
 
@@ -85,3 +86,16 @@ def todo_delete(id):
     db.session.delete(todo)
     db.session.commit()
     return redirect('/todo')
+
+
+@app.route('/todo/<id>/json', methods=['GET'])
+def todo_json(id):
+    if not session.get('logged_in'):
+        return redirect('/login')
+    user_id = session['user'].get('id')
+    todo = Todo.query.filter_by(id = id).first()
+    if todo.user_id != user_id :
+        return render_template('404.html')
+    todo_schema = TodoSchema()
+    todo_json = todo_schema.dump(todo).data
+    return jsonify({'Todo': todo_json})

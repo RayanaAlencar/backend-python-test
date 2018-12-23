@@ -1,5 +1,6 @@
 from flask import Flask, g
 from flask_sqlalchemy import SQLAlchemy
+from flask_marshmallow import Marshmallow
 
 # configuration
 DATABASE = '/tmp/alayatodo.db'
@@ -13,5 +14,6 @@ SQLALCHEMY_TRACK_MODIFICATIONS = False
 app = Flask(__name__)
 app.config.from_object(__name__)
 db = SQLAlchemy(app)
+ma = Marshmallow(app)
 
 import alayatodo.views

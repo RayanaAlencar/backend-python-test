@@ -1,4 +1,4 @@
-from alayatodo import db
+from alayatodo import db,ma
 from sqlalchemy.orm import validates
 
 class User(db.Model):
@@ -35,3 +35,7 @@ class Todo(db.Model):
 
     def __repr__(self):
         return '<Todo %r>' % (self.description)
+
+class TodoSchema(ma.Schema):
+    class Meta:
+        fields = ('id','user_id', 'description')
