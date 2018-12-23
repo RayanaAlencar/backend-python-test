@@ -1,4 +1,5 @@
 from alayatodo import db
+from sqlalchemy.orm import validates
 
 class User(db.Model):
     __tablename__ = 'users'
@@ -21,6 +22,12 @@ class Todo(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'),
         nullable=False)
     description = db.Column(db.String(255),  nullable=False)
+
+    @validates('description')
+    def validate_description(self, key, description):
+        if not description:
+            raise AssertionError('No description provided')
+        return description
 
     def __init__(self, user_id, description):
         self.user_id        = user_id
