@@ -21,8 +21,7 @@ class Todo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'),
         nullable=False)
-    description = db.Column(db.String(255),  nullable=False)
-
+    description = db.Column(db.String(255), nullable=False)
     @validates('description')
     def validate_description(self, key, description):
         if not description:
