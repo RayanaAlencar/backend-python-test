@@ -19,18 +19,21 @@ class User(db.Model):
 class Todo(db.Model):
     __tablename__ = 'todos'
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'),
-        nullable=False)
+    user_id     = db.Column(db.Integer, db.ForeignKey('users.id'),
+                             nullable=False)
     description = db.Column(db.String(255), nullable=False)
+    complete    = db.Column(db.Boolean, default=0, nullable=False)
+
     @validates('description')
     def validate_description(self, key, description):
         if not description:
             raise AssertionError('No description provided')
         return description
 
-    def __init__(self, user_id, description):
+    def __init__(self, user_id, description, complete):
         self.user_id        = user_id
         self.description    = description
+        self.complete       = complete
 
     def __repr__(self):
         return '<Todo %r>' % (self.description)

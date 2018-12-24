@@ -89,7 +89,7 @@ def todos_POST():
         return redirect('/login')
     user_id = session['user']['id']
     description = request.form.get('description', '')
-    new_Todo = Todo(user_id, description)
+    new_Todo = Todo(user_id, description,False)
     try:
         db.session.add(new_Todo)
         db.session.commit()
@@ -111,6 +111,21 @@ def todo_delete(id):
         db.session.delete(todo)
         db.session.commit()
         flash('Todo '+ todo.description + ' deleted with Success!', 'success')
+    except SQLAlchemyError:
+        db.session.rollback()
+        flash('Something went wrong. Please try again later','danger')
+    return redirect('/todo')
+
+
+@app.route('/todo/update/<id>', methods=['POST'])
+def todo_update(id):
+    if not session.get('logged_in'):
+        return redirect('/login')
+    todo = Todo.query.filter_by(id = id).first()
+    todo.complete = not(todo.complete)
+    try:
+        db.session.commit()
+        flash('Todo '+ todo.description + ' updated with Success!', 'success')
     except SQLAlchemyError:
         db.session.rollback()
         flash('Something went wrong. Please try again later','danger')
