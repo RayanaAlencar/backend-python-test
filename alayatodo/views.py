@@ -7,7 +7,8 @@ from flask import (
     request,
     session,
     jsonify,
-    flash
+    flash,
+    url_for
     )
 
 
@@ -65,8 +66,20 @@ def todos():
     if not session.get('logged_in'):
         return redirect('/login')
     user_id = session['user'].get('id')
-    todos = Todo.query.filter_by(user_id = user_id)
-    return render_template('todos.html', todos = todos)
+    page = request.args.get('page', 1, type=int)
+    next_url = None
+    prev_url = None
+    todos = Todo.query.filter_by(user_id = user_id).paginate(
+        page, app.config['POSTS_PER_PAGE'], False)
+    if not todos.items:
+        return render_template('404.html')
+    if todos.has_next:
+        next_url = url_for('todos', page=todos.next_num)
+    if todos.has_prev:
+        prev_url = url_for('todos', page=todos.prev_num)
+    return render_template('todos.html', todos = todos,
+                           next_url=next_url,
+                           prev_url=prev_url)
 
 
 @app.route('/todo', methods=['POST'])

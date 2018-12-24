@@ -10,6 +10,7 @@ USERNAME = 'admin'
 PASSWORD = 'default'
 SQLALCHEMY_DATABASE_URI = 'sqlite:///' + DATABASE
 SQLALCHEMY_TRACK_MODIFICATIONS = False
+POSTS_PER_PAGE = 5
 
 app = Flask(__name__)
 app.config.from_object(__name__)
