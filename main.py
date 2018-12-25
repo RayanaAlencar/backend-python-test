@@ -5,10 +5,10 @@ Usage:
   main.py initdb
 """
 from docopt import docopt
+from dotenv import load_dotenv
+from alayatodo import app
 import subprocess
 import os
-
-from alayatodo import app
 
 
 def _run_sql(filename):
@@ -24,6 +24,7 @@ def _run_sql(filename):
 
 
 if __name__ == '__main__':
+    load_dotenv()
     args = docopt(__doc__)
     if args['initdb']:
         _run_sql('resources/database.sql')
