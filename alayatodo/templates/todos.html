@@ -15,26 +15,26 @@
                 <td>{{ todo.id }}</td>
                 <td>{{ todo.user_id }}</td>
                 <td>
-                    <a href="{{ url_for('todo', id=todo.id) }}">
+                    <a href="{{ url_for('todo', id=todo.id) }}" style="word-break: break-all;">
                        {{ todo.description }}
                     </a>
                 </td>
                 {%if todo.complete %}
                     <td>
                         <form method="post" action="{{ url_for('todo_update', id=todo.id) }}">
-                            <button type="submit" class="btn btn-xs btn-warning"><span class="glyphicon glyphicon glyphicon-ban-circle glyphicon-white"></span></button>
+                            <button type="submit" class="btn btn-xs btn-warning" data-toggle="tooltip" data-placement="top" title="mark as not Done" ><span class="glyphicon glyphicon glyphicon-ban-circle glyphicon-white"></span></button>
                         </form>
                     </td>
                 {%else%}
                     <td>
                         <form method="post" action="{{ url_for('todo_update', id=todo.id) }}">
-                            <button type="submit" class="btn btn-xs btn-success"><span class="glyphicon glyphicon glyphicon glyphicon-ok glyphicon-white"></span></button>
+                            <button type="submit" class="btn btn-xs btn-success" data-toggle="tooltip" data-placement="top" title="mark as Done"><span class="glyphicon glyphicon glyphicon glyphicon-ok glyphicon-white"></span></button>
                         </form>
                     </td>
                 {% endif %}
                 <td>
                     <form method="post" action="{{ url_for('todo_delete', id=todo.id) }}">
-                        <button type="submit" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-remove glyphicon-white"></span></button>
+                        <button type="submit" class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="top" title="delete Todo"><span class="glyphicon glyphicon-remove glyphicon-white"></span></button>
                     </form>
                 </td>
             </tr>
