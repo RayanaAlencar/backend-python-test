@@ -6,3 +6,4 @@ flask_marshmallow
 marshmallow-sqlalchemy
 flask_migrate
 python-dotenv
+werkzeug

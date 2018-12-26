@@ -1,20 +1,22 @@
+from werkzeug.security import generate_password_hash,check_password_hash
 from alayatodo import db,ma
 from sqlalchemy.orm import validates
 
 class User(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
-    username    = db.Column(db.String(255),  nullable=False)
-    password    = db.Column(db.String(255),  nullable=False)
+    username    = db.Column(db.String(255), nullable=False)
+    password    = db.Column(db.String(255), nullable=False)
     todos       = db.relationship('Todo', backref='user', lazy=True)
-
-    def __init__(self, username, password):
-        self.username    = username
-        self.password    = password
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
 
+    def set_password(self, password):
+        self.password = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password, password)
 
 class Todo(db.Model):
     __tablename__ = 'todos'

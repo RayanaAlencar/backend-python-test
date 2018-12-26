@@ -11,7 +11,6 @@ from flask import (
     url_for
     )
 
-
 @app.route('/')
 def home():
     with app.open_resource('../README.md', mode='r') as f:
@@ -28,16 +27,18 @@ def login():
 def login_POST():
     username = request.form.get('username')
     password = request.form.get('password')
-
-    user = User.query.filter_by(username = username,password = password).first()
-
+    user = User.query.filter_by(username = username).first()
     if user:
-        session['user'] = {"username": user.username,
-                           "password": user.password,
-                           "id":user.id}
-        session['logged_in'] = True
-        return redirect('/todo')
-
+        if user.check_password(password):
+            session['user'] = {"username": user.username,
+                               "password": user.password,
+                               "id":user.id}
+            session['logged_in'] = True
+            return redirect('/todo')
+        else:
+         flash('Wrong password','danger')
+    else:
+        flash('Invalid user','danger')
     return redirect('/login')
 
 
