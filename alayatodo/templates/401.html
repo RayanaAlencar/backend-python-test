@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <div class="col-md-4 col-md-offset-4">
+        <h1>401 Access Denied</h1>
+        <p> The request has not been applied because it lacks valid <br>
+          authentication credentials for the target resource.</p>
+          {% if not current_user.is_authenticated %}
+            <p> Please <a href="{{ url_for('login') }}">go to Login</a>
+          {% endif %}
+    </div>
+{% endblock %}

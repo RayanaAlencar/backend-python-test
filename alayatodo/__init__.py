@@ -1,7 +1,8 @@
-from flask import Flask, g
+from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from flask_migrate import Migrate
+from flask_login import LoginManager
 import os
 
 # configuration
@@ -21,5 +22,6 @@ db = SQLAlchemy(app)
 ma = Marshmallow(app)
 migrate = Migrate(app, db, directory=MIGRATION_DIR)
 migrate.init_app(app, db, render_as_batch= True)
+login = LoginManager(app)
 
 import alayatodo.views

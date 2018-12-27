@@ -7,3 +7,4 @@ marshmallow-sqlalchemy
 flask_migrate
 python-dotenv
 werkzeug
+flask_login
