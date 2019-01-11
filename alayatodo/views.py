@@ -113,6 +113,8 @@ def todo_delete(id):
     if not (current_user.is_authenticated):
         return render_template('401.html')
     todo = Todo.query.filter_by(id = id).first()
+    if todo is None:
+        return render_template('404.html')
     try:
         db.session.delete(todo)
         db.session.commit()
